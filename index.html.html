@@ -1,0 +1,1812 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ColorLab: El poder del color — Psicología del Color (4.º ESO)</title>
+
+  <style>
+    /* CSS RESET & CUSTOM DESIGN TOKENS */
+    *, *::before, *::after {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    :root {
+      --bg-gradient: linear-gradient(135deg, #090d16 0%, #0f172a 40%, #171026 100%);
+      --card-bg: rgba(15, 23, 42, 0.75);
+      --card-border: rgba(255, 255, 255, 0.12);
+      --text-main: #f8fafc;
+      --text-muted: #94a3b8;
+      --accent-cyan: #06b6d4;
+      --accent-blue: #3b82f6;
+      --accent-purple: #a855f7;
+      --accent-green: #22c55e;
+      --accent-red: #ef4444;
+      --accent-yellow: #eab308;
+      --radius-sm: 0.5rem;
+      --radius-md: 0.875rem;
+      --radius-lg: 1.25rem;
+      --font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+
+    body {
+      font-family: var(--font-family);
+      background: var(--bg-gradient);
+      color: var(--text-main);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      line-height: 1.5;
+      overflow-x: hidden;
+      user-select: none;
+    }
+
+    /* HEADER & BRANDING */
+    header {
+      position: sticky;
+      top: 0;
+      z-index: 40;
+      background: rgba(9, 13, 22, 0.9);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--card-border);
+      padding: 0.75rem 1.5rem;
+    }
+
+    .header-container {
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .brand-icon {
+      width: 2.5rem;
+      height: 2.5rem;
+      border-radius: var(--radius-md);
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-purple));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.25rem;
+      box-shadow: 0 4px 14px rgba(6, 182, 212, 0.4);
+    }
+
+    .brand-title {
+      font-size: 1.15rem;
+      font-weight: 800;
+      background: linear-gradient(90deg, #ffffff, #cbd5e1, var(--accent-cyan));
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .brand-subtitle {
+      font-size: 0.7rem;
+      color: var(--text-muted);
+      font-weight: 600;
+    }
+
+    .header-stats {
+      display: flex;
+      align-items: center;
+      gap: 1rem;
+    }
+
+    .badge-pill {
+      background: rgba(30, 41, 59, 0.8);
+      border: 1px solid var(--card-border);
+      padding: 0.4rem 0.85rem;
+      border-radius: 9999px;
+      font-size: 0.8rem;
+      font-weight: 700;
+      color: #cbd5e1;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    /* MAIN CONTENT WRAPPER */
+    main {
+      flex: 1;
+      max-width: 1200px;
+      width: 100%;
+      margin: 0 auto;
+      padding: 1.5rem 1rem;
+      display: flex;
+      flex-direction: column;
+    }
+
+    /* VIEW SECTIONS WITH TRANSITION */
+    .view-section {
+      display: flex;
+      flex-direction: column;
+      gap: 1.5rem;
+      transition: opacity 0.3s ease, transform 0.3s ease;
+    }
+
+    .hidden-view {
+      display: none !important;
+      opacity: 0;
+      transform: scale(0.98);
+    }
+
+    /* GLASS CARDS */
+    .glass-card {
+      background: var(--card-bg);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      box-shadow: 0 15px 30px rgba(0, 0, 0, 0.4);
+    }
+
+    /* BUTTON STYLES */
+    .btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.5rem;
+      font-family: inherit;
+      font-size: 0.95rem;
+      font-weight: 700;
+      padding: 0.8rem 1.5rem;
+      border-radius: var(--radius-md);
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+      text-decoration: none;
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, var(--accent-cyan), var(--accent-blue));
+      color: #ffffff;
+      box-shadow: 0 4px 14px rgba(6, 182, 212, 0.35);
+    }
+
+    .btn-primary:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(6, 182, 212, 0.5);
+      background: linear-gradient(135deg, #0891b2, #2563eb);
+    }
+
+    .btn-secondary {
+      background: rgba(51, 65, 85, 0.8);
+      color: #f1f5f9;
+      border: 1px solid var(--card-border);
+    }
+
+    .btn-secondary:hover {
+      background: rgba(71, 85, 105, 1);
+      transform: translateY(-1px);
+    }
+
+    .btn-success {
+      background: linear-gradient(135deg, #16a34a, #22c55e);
+      color: white;
+      box-shadow: 0 4px 14px rgba(34, 197, 94, 0.35);
+    }
+
+    .btn-success:hover:not(:disabled) {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 20px rgba(34, 197, 94, 0.5);
+    }
+
+    .btn:disabled {
+      opacity: 0.4;
+      cursor: not-allowed;
+      transform: none !important;
+      box-shadow: none !important;
+    }
+
+    /* REALM SELECTION CARDS GRID */
+    .realms-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+      gap: 1.25rem;
+      margin-top: 1rem;
+    }
+
+    .realm-card {
+      background: rgba(30, 41, 59, 0.5);
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius-lg);
+      padding: 1.5rem;
+      cursor: pointer;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .realm-card::before {
+      content: '';
+      position: absolute;
+      top: 0;
+      left: 0;
+      right: 0;
+      height: 4px;
+      background: linear-gradient(90deg, var(--accent-cyan), var(--accent-purple));
+      opacity: 0;
+      transition: opacity 0.25s ease;
+    }
+
+    .realm-card:hover {
+      transform: translateY(-4px);
+      border-color: rgba(56, 189, 248, 0.5);
+      background: rgba(30, 41, 59, 0.85);
+      box-shadow: 0 12px 24px rgba(0, 0, 0, 0.3);
+    }
+
+    .realm-card:hover::before {
+      opacity: 1;
+    }
+
+    .realm-emoji {
+      font-size: 2.5rem;
+      line-height: 1;
+    }
+
+    .realm-title {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: #ffffff;
+    }
+
+    .realm-desc {
+      font-size: 0.85rem;
+      color: var(--text-muted);
+    }
+
+    /* TWO COLUMN LAYOUT FOR MATCHING ACTIVITY */
+    .activity-layout {
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 1.5rem;
+    }
+
+    @media (min-width: 900px) {
+      .activity-layout {
+        grid-template-columns: 1fr 1.15fr;
+      }
+    }
+
+    .column-header {
+      font-size: 1rem;
+      font-weight: 800;
+      color: #cbd5e1;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      margin-bottom: 0.75rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .column-subtitle {
+      font-size: 0.75rem;
+      color: var(--text-muted);
+      font-weight: normal;
+      text-transform: none;
+    }
+
+    .cards-stack {
+      display: flex;
+      flex-direction: column;
+      gap: 1rem;
+      min-height: 400px;
+    }
+
+    /* PALETTE CARD (DRAGGABLE) */
+    .palette-card {
+      background: rgba(30, 41, 59, 0.7);
+      border: 2px solid var(--card-border);
+      border-radius: var(--radius-md);
+      padding: 1rem;
+      cursor: grab;
+      transition: all 0.2s ease;
+      position: relative;
+    }
+
+    .palette-card:hover {
+      border-color: rgba(56, 189, 248, 0.6);
+      transform: translateY(-2px);
+      box-shadow: 0 8px 16px rgba(0, 0, 0, 0.3);
+    }
+
+    .palette-card.dragging {
+      opacity: 0.4;
+      cursor: grabbing;
+      border-style: dashed;
+    }
+
+    .palette-card.selected-for-tap {
+      border-color: var(--accent-cyan);
+      box-shadow: 0 0 18px rgba(6, 182, 212, 0.6);
+      background: rgba(14, 116, 144, 0.3);
+    }
+
+    .palette-card.matched-assigned {
+      opacity: 0.5;
+      cursor: not-allowed;
+      pointer-events: none;
+      filter: grayscale(0.5);
+    }
+
+    .swatches-container {
+      display: flex;
+      gap: 0.5rem;
+      margin-bottom: 0.6rem;
+      align-items: center;
+    }
+
+    .swatch-circle {
+      width: 2.25rem;
+      height: 2.25rem;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      box-shadow: 0 2px 6px rgba(0,0,0,0.3);
+      transition: transform 0.2s ease;
+    }
+
+    .palette-card:hover .swatch-circle {
+      transform: scale(1.08);
+    }
+
+    .palette-name {
+      font-weight: 700;
+      font-size: 0.95rem;
+      color: #ffffff;
+      margin-bottom: 0.25rem;
+    }
+
+    .palette-tags {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 0.35rem;
+    }
+
+    .palette-tag {
+      font-size: 0.7rem;
+      padding: 0.15rem 0.5rem;
+      border-radius: 9999px;
+      background: rgba(255, 255, 255, 0.08);
+      color: var(--text-muted);
+    }
+
+    /* PROJECT DROP ZONE CARDS */
+    .project-card {
+      background: rgba(15, 23, 42, 0.85);
+      border: 2px dashed rgba(255, 255, 255, 0.18);
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      transition: all 0.25s ease;
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      position: relative;
+      min-height: 110px;
+    }
+
+    .project-card.drag-over {
+      border-color: var(--accent-cyan);
+      background: rgba(6, 182, 212, 0.12);
+      transform: scale(1.01);
+    }
+
+    .project-header {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 0.75rem;
+    }
+
+    .project-title-box {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .project-emoji {
+      font-size: 1.8rem;
+      background: rgba(30, 41, 59, 0.8);
+      padding: 0.4rem;
+      border-radius: var(--radius-sm);
+      line-height: 1;
+    }
+
+    .project-title {
+      font-weight: 800;
+      font-size: 1rem;
+      color: #ffffff;
+    }
+
+    .project-desc {
+      font-size: 0.8rem;
+      color: var(--text-muted);
+      line-height: 1.4;
+    }
+
+    /* SLOT WHERE MATCHED PALETTE IS PLACED */
+    .drop-slot {
+      background: rgba(2, 6, 23, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      border-radius: var(--radius-sm);
+      padding: 0.6rem 0.8rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      min-height: 52px;
+      transition: all 0.25s ease;
+    }
+
+    .drop-slot-placeholder {
+      font-size: 0.8rem;
+      color: #64748b;
+      font-style: italic;
+      display: flex;
+      align-items: center;
+      gap: 0.4rem;
+    }
+
+    .dropped-palette-content {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+
+    .dropped-swatches {
+      display: flex;
+      gap: 0.35rem;
+    }
+
+    .dropped-swatch {
+      width: 1.4rem;
+      height: 1.4rem;
+      border-radius: 50%;
+      border: 1px solid rgba(255,255,255,0.3);
+    }
+
+    .remove-match-btn {
+      background: rgba(239, 68, 68, 0.2);
+      border: 1px solid rgba(239, 68, 68, 0.4);
+      color: #fca5a5;
+      border-radius: 50%;
+      width: 1.6rem;
+      height: 1.6rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 0.8rem;
+      transition: all 0.15s ease;
+    }
+
+    .remove-match-btn:hover {
+      background: rgba(239, 68, 68, 0.8);
+      color: white;
+    }
+
+    /* VERIFICATION FEEDBACK BADGES & CARDS */
+    .status-badge {
+      font-size: 1.25rem;
+      font-weight: 800;
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+
+    .project-card.is-correct {
+      border: 2px solid var(--accent-green) !important;
+      background: rgba(22, 101, 52, 0.2) !important;
+    }
+
+    .project-card.is-incorrect {
+      border: 2px solid var(--accent-red) !important;
+      background: rgba(153, 27, 27, 0.2) !important;
+    }
+
+    .feedback-box {
+      margin-top: 0.5rem;
+      background: rgba(15, 23, 42, 0.95);
+      border-left: 4px solid var(--accent-red);
+      padding: 0.8rem 1rem;
+      border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+      font-size: 0.82rem;
+      color: #f1f5f9;
+      animation: fadeIn 0.3s ease-out;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-4px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* ACTION BAR */
+    .actions-bar {
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+      padding-top: 1.25rem;
+      border-top: 1px solid var(--card-border);
+      margin-top: 1.5rem;
+    }
+
+    /* INFOGRAPHIC VISUAL SUMMARY (FINAL STAGE) */
+    .infographic-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .color-info-card {
+      border-radius: var(--radius-md);
+      padding: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.5rem;
+      border: 1px solid rgba(255, 255, 255, 0.12);
+      transition: transform 0.2s ease;
+    }
+
+    .color-info-card:hover {
+      transform: translateY(-3px);
+    }
+
+    .color-info-header {
+      display: flex;
+      align-items: center;
+      gap: 0.6rem;
+      font-weight: 800;
+      font-size: 1.05rem;
+    }
+
+    .color-dot-large {
+      width: 1.5rem;
+      height: 1.5rem;
+      border-radius: 50%;
+      border: 2px solid rgba(255, 255, 255, 0.4);
+      box-shadow: 0 2px 8px rgba(0,0,0,0.4);
+    }
+
+    .color-concepts {
+      font-size: 0.82rem;
+      color: #e2e8f0;
+      line-height: 1.4;
+    }
+
+    /* CANVAS FOR CELEBRATION */
+    #confetti-canvas {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 100;
+    }
+
+    /* MOBILE INSTRUCTION TAP AID */
+    .tap-hint-banner {
+      background: rgba(6, 182, 212, 0.15);
+      border: 1px solid rgba(6, 182, 212, 0.3);
+      border-radius: var(--radius-md);
+      padding: 0.75rem 1rem;
+      font-size: 0.85rem;
+      color: #7dd3fc;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      margin-bottom: 1rem;
+    }
+
+    /* PRINT FRIENDLY */
+    @media print {
+      body { background: #fff; color: #000; }
+      header, .actions-bar, .remove-match-btn { display: none !important; }
+      .glass-card { background: #fff; border: 1px solid #ccc; color: #000; box-shadow: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- HEADER -->
+  <header>
+    <div class="header-container">
+      <div class="brand">
+        <div class="brand-icon">🎨</div>
+        <div>
+          <h1 class="brand-title">ColorLab: El poder del color</h1>
+          <p class="brand-subtitle">Psicología del Color en la Comunicación Visual • 4.º ESO</p>
+        </div>
+      </div>
+      <div class="header-stats">
+        <div class="badge-pill" id="score-badge">
+          <span>🎯 Aciertos:</span>
+          <strong id="score-counter" style="color: var(--accent-cyan);">0 / 0</strong>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <!-- MAIN CONTAINER -->
+  <main>
+    <!-- CANVAS FOR CONFETTI EFFECT -->
+    <canvas id="confetti-canvas"></canvas>
+
+    <!-- VIEW 1: REALM SELECTION -->
+    <section id="view-realms" class="view-section">
+      <div class="glass-card" style="text-align: center; padding: 2.5rem 1.5rem;">
+        <span style="font-size: 0.8rem; font-weight: 800; color: var(--accent-cyan); text-transform: uppercase; letter-spacing: 0.08em; display: block; margin-bottom: 0.5rem;">
+          Laboratorio de Expresión Artística
+        </span>
+        <h2 style="font-size: 2rem; font-weight: 900; margin-bottom: 0.75rem; color: #ffffff;">
+          Selecciona un Ámbito de la Comunicación Visual
+        </h2>
+        <p style="color: var(--text-muted); max-width: 650px; margin: 0 auto; font-size: 0.95rem;">
+          Cada ámbito profesional utiliza el color estratégicamente para transmitir emociones, provocar conductas y comunicar valores. Elige un sector para comenzar tu encargo de diseño.
+        </p>
+      </div>
+
+      <div class="realms-grid" id="realms-container">
+        <!-- Rendered dynamically via JavaScript -->
+      </div>
+    </section>
+
+    <!-- VIEW 2: MATCHING ACTIVITY -->
+    <section id="view-activity" class="view-section hidden-view">
+      
+      <!-- Realm Context Header -->
+      <div class="glass-card" style="padding: 1.25rem 1.5rem; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+        <div style="display: flex; align-items: center; gap: 0.8rem;">
+          <span id="active-realm-emoji" style="font-size: 2.2rem;">🎬</span>
+          <div>
+            <h2 id="active-realm-title" style="font-size: 1.3rem; font-weight: 900; color: white;">Ámbito Seleccionado</h2>
+            <p id="active-realm-desc" style="font-size: 0.85rem; color: var(--text-muted);">Relaciona cada paleta cromática con el proyecto correspondiente.</p>
+          </div>
+        </div>
+        <button class="btn btn-secondary" onclick="returnToRealms()">
+          <span>← Cambiar Ámbito</span>
+        </button>
+      </div>
+
+      <!-- Tap / Mobile User Hint -->
+      <div class="tap-hint-banner">
+        <span style="font-size: 1.2rem;">💡</span>
+        <span><strong>Modo de interacción:</strong> Puedes <strong>arrastrar y soltar</strong> la paleta sobre un proyecto, o <strong>hacer clic en una paleta</strong> y después en el proyecto de destino.</span>
+      </div>
+
+      <!-- Two Column Layout: Palettes vs Projects -->
+      <div class="activity-layout">
+        
+        <!-- Left Column: Color Palettes -->
+        <div class="glass-card">
+          <div class="column-header">
+            <span>Paletas Cromáticas</span>
+            <span class="column-subtitle">Arrastra o selecciona</span>
+          </div>
+          <div class="cards-stack" id="palettes-stack">
+            <!-- Palettes rendered dynamically -->
+          </div>
+        </div>
+
+        <!-- Right Column: Visual Communication Projects -->
+        <div class="glass-card">
+          <div class="column-header">
+            <span>Proyectos de Comunicación</span>
+            <span class="column-subtitle">Zona de entrega</span>
+          </div>
+          <div class="cards-stack" id="projects-stack">
+            <!-- Projects rendered dynamically -->
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Activity Action & Control Bar -->
+      <div class="glass-card actions-bar">
+        <button class="btn btn-secondary" onclick="resetCurrentMatches()">
+          <span>🔄 Limpiar Selecciones</span>
+        </button>
+        <button class="btn btn-success" id="btn-check-answers" onclick="checkAnswers()" style="font-size: 1.05rem; padding: 0.9rem 2rem;">
+          <span>✅ Comprobar Respuestas</span>
+        </button>
+      </div>
+
+    </section>
+
+    <!-- VIEW 3: FINAL SUMMARY INFOGRAPHIC -->
+    <section id="view-summary" class="view-section hidden-view">
+      
+      <div class="glass-card" style="text-align: center; padding: 2.5rem 1.5rem;">
+        <div style="font-size: 3.5rem; margin-bottom: 0.5rem;">🏆</div>
+        <h2 style="font-size: 2.25rem; font-weight: 900; color: white; margin-bottom: 0.5rem;">
+          ¡Excelente Trabajo! Desafío Completado
+        </h2>
+        <p style="color: var(--text-muted); max-width: 650px; margin: 0 auto; font-size: 1rem;">
+          Has demostrado un dominio riguroso de la psicología del color aplicada a la comunicación visual en 4.º de ESO. A continuación, dispones de una síntesis gráfica con el significado cromático de los 8 colores fundamentales.
+        </p>
+      </div>
+
+      <!-- 8 Core Colors Infographic Grid -->
+      <div class="glass-card">
+        <h3 style="font-size: 1.25rem; font-weight: 800; color: white; margin-bottom: 1.25rem; display: flex; align-items: center; gap: 0.5rem;">
+          <span>🎨</span> Infografía Didáctica: Psicología de los 8 Colores Fundamentales
+        </h3>
+        
+        <div class="infographic-grid" id="infographic-container">
+          <!-- 8 colors dynamically injected -->
+        </div>
+      </div>
+
+      <!-- Bottom Restart Action -->
+      <div class="glass-card actions-bar" style="justify-content: center; padding: 1.5rem;">
+        <button class="btn btn-primary" onclick="restartEntireActivity()" style="font-size: 1.1rem; padding: 1rem 2.5rem;">
+          <span>🚀 Volver a Empezar / Elegir otro Ámbito</span>
+        </button>
+      </div>
+
+    </section>
+
+  </main>
+
+  <script>
+    /* ==========================================================================
+       CURRICULAR DATA: 6 REALMS WITH 6-8 RIGOROUS COLOR PSYCHOLOGY PROJECTS EACH
+       ========================================================================== */
+    const REALMS_DATA = [
+      {
+        id: "audiovisual",
+        title: "Comunicación Audiovisual",
+        emoji: "🎬",
+        desc: "Cine, series, cartelismo y producción de medios donde el color define la atmósfera narrativa.",
+        items: [
+          {
+            id: "p_terror",
+            emoji: "🍿",
+            title: "Cartel de Película de Terror Psicológico",
+            desc: "Busca generar tensión claustrofóbica, angustia, peligro inminente y misterio opresivo.",
+            correctPaletteId: "pal_terror",
+            palette: {
+              id: "pal_terror",
+              name: "Tenebrosa & Amenaza",
+              colors: ["#090d16", "#1e293b", "#7f1d1d", "#f87171"],
+              tags: ["Negro Abisal", "Azul Noche", "Rojo Sangre"]
+            },
+            wrongFeedback: "Esta paleta no transmite la angustia ni el miedo sofocante necesarios para el cine de terror. El negro abisal y el azul frío aíslan la escena, mientras que el rojo sangre señala el peligro o la violencia implícita."
+          },
+          {
+            id: "p_romantica",
+            emoji: "💌",
+            title: "Cartel de Comedia Romántica",
+            desc: "Transmite optimismo, ternura, dulzura, ligereza emocional y calidez afectiva.",
+            correctPaletteId: "pal_romantica",
+            palette: {
+              id: "pal_romantica",
+              name: "Pastel Dulce & Afán",
+              colors: ["#fbcfe8", "#f472b6", "#fef08a", "#ffffff"],
+              tags: ["Rosa Pastel", "Rosa Chicle", "Amarillo Sol"]
+            },
+            wrongFeedback: "El cine romántico requiere colores cálidos y de baja saturación (tonos pastel). El rosa evapora la agresividad y sugiere afecto e inocencia, mientras que el amarillo claro aporta la alegría propia de la comedia."
+          },
+          {
+            id: "p_scifi",
+            emoji: "🚀",
+            title: "Película de Ciencia Ficción Cyberpunk",
+            desc: "Ambiente futurista distópico, tecnología avanzada, noche urbana e intensidad neón.",
+            correctPaletteId: "pal_scifi",
+            palette: {
+              id: "pal_scifi",
+              name: "Cyber Neón Nocturno",
+              colors: ["#020617", "#d946ef", "#06b6d4", "#a855f7"],
+              tags: ["Oscuridad", "Magenta Neón", "Cian Eléctrico"]
+            },
+            wrongFeedback: "La ciencia ficción urbana contrasta un fondo abisal oscuro con colores secundarios hiper-saturados como magenta y cian, simulando luces de neón y tecnología sintética."
+          },
+          {
+            id: "p_naturaleza",
+            emoji: "🐋",
+            title: "Documental de Vida Marina y Océanos",
+            desc: "Evoca la profundidad marina, serenidad, frescura del agua y pureza del ecosistema acuático.",
+            correctPaletteId: "pal_naturaleza",
+            palette: {
+              id: "pal_naturaleza",
+              name: "Profundidad Oceánica",
+              colors: ["#0369a1", "#0891b2", "#06b6d4", "#ecfeff"],
+              tags: ["Azul Océano", "Turquesa", "Cian Claro"]
+            },
+            wrongFeedback: "Para el ecosistema marino, la escala de azules y turquesas comunica científicamente serenidad, profundidad e higiene hídrica natural."
+          },
+          {
+            id: "p_historico",
+            emoji: "📜",
+            title: "Drama Histórico de Época",
+            desc: "Comunica antigüedad, solemnidad, patrimonio, tradición rústica y nostalgia sobria.",
+            correctPaletteId: "pal_historico",
+            palette: {
+              id: "pal_historico",
+              name: "Sepia & Nobleza Añeja",
+              colors: ["#451a03", "#78350f", "#b45309", "#fef3c7"],
+              tags: ["Marrón Sepia", "Ocre Tostado", "Dorado Envejecido"]
+            },
+            wrongFeedback: "Las producciones históricas recurren a colores analógicos de la tierra (marrones, ocres, dorados mates), que evocan materiales antiguos, pergaminos y solemnidad."
+          },
+          {
+            id: "p_animacion",
+            emoji: "🎈",
+            title: "Película de Animación Infantil",
+            desc: "Estimulación directa, máxima energía alegre, simplicidad y alta receptividad infantil.",
+            correctPaletteId: "pal_animacion",
+            palette: {
+              id: "pal_animacion",
+              name: "Primarios Lúdicos",
+              colors: ["#ef4444", "#3b82f6", "#eab308", "#22c55e"],
+              tags: ["Rojo Vivo", "Azul Puro", "Amarillo Sol"]
+            },
+            wrongFeedback: "El público infantil responde visualmente con mayor dinamismo a la claridad y alto contraste de los colores primarios y secundarios puros sin desaturar."
+          }
+        ]
+      },
+      {
+        id: "publicidad",
+        title: "Publicidad",
+        emoji: "📢",
+        desc: "Estrategias de comunicación comercial destinadas a captar la atención e incentivar acciones.",
+        items: [
+          {
+            id: "p_rebajas",
+            emoji: "⚡",
+            title: "Campaña de Ofertas y Rebajas Relámpago",
+            desc: "Busca provocar sentido de urgencia, llamada a la acción inmediata y percepción de oportunidad.",
+            correctPaletteId: "pal_rebajas",
+            palette: {
+              id: "pal_rebajas",
+              name: "Urgencia & Impacto",
+              colors: ["#dc2626", "#f59e0b", "#000000", "#ffffff"],
+              tags: ["Rojo Alerta", "Amarillo Chillón", "Negro"]
+            },
+            wrongFeedback: "El rojo hiper-saturado acelera el pulso e indica urgencia de compra, mientras que el amarillo chillón capta la atención óptica en segundos."
+          },
+          {
+            id: "p_lujo",
+            emoji: "💎",
+            title: "Anuncio de Perfume de Alta Gama",
+            desc: "Proyecta máxima exclusividad, distinción aristocrática, sofisticación y valor elevado.",
+            correctPaletteId: "pal_lujo",
+            palette: {
+              id: "pal_lujo",
+              name: "Lujo Imperial & Noche",
+              colors: ["#09090b", "#581c87", "#eab308", "#fef08a"],
+              tags: ["Negro Absoluto", "Púrpura Real", "Oro"]
+            },
+            wrongFeedback: "El lujo huye de colores chillones de gran consumo. El negro absorbe la luz dando sobriedad, el púrpura evoca nobleza y el oro simboliza riqueza."
+          },
+          {
+            id: "p_fastfood",
+            emoji: "🍟",
+            title: "Publicidad de Cadena de Comida Rápida",
+            desc: "Diseñada para estimular el apetito, salivación inmediata y dinamismo de consumo rápido.",
+            correctPaletteId: "pal_fastfood",
+            palette: {
+              id: "pal_fastfood",
+              name: "Ketchup & Mostaza",
+              colors: ["#ef4444", "#f59e0b", "#991b1b", "#ffffff"],
+              tags: ["Rojo Apetito", "Amarillo Mostaza", "Blanco"]
+            },
+            wrongFeedback: "El efecto Ketchup/Mustard es un clásico publicitario: el rojo estimula el apetito y la aceleración física; el amarillo aporta alegría y visibilidad."
+          },
+          {
+            id: "p_spa",
+            emoji: "🧘‍♀️",
+            title: "Anuncio de Centro de Spa y Salud Zen",
+            desc: "Persigue disipar el estrés, comunicar paz interior, higiene natural y serenidad corporal.",
+            correctPaletteId: "pal_spa",
+            palette: {
+              id: "pal_spa",
+              name: "Brisa Zen & Relax",
+              colors: ["#99f6e4", "#a7f3d0", "#e0e7ff", "#ffffff"],
+              tags: ["Verde Menta", "Cian Suave", "Blanco Puro"]
+            },
+            wrongFeedback: "Para terapias de descanso, los colores cálidos o muy oscuros alteran la mente. Los verdes menta desaturados y cianes descienden el ritmo cardíaco."
+          },
+          {
+            id: "p_deporte",
+            emoji: "🏃‍♂️",
+            title: "Bebida Deportiva de Alta Energía",
+            desc: "Transmite vitalidad, resistencia física, dinamismo juvenil y rápida hidratación.",
+            correctPaletteId: "pal_deporte",
+            palette: {
+              id: "pal_deporte",
+              name: "Energía Cítrica Electrizante",
+              colors: ["#ea580c", "#84cc16", "#06b6d4", "#0f172a"],
+              tags: ["Naranja Vigor", "Verde Lima", "Cian"]
+            },
+            wrongFeedback: "El naranja representa la energía física activa sin la agresividad del rojo. Combinado con verde lima y cian, evoca frescura y movimiento deportivo."
+          },
+          {
+            id: "p_seguros",
+            emoji: "🛡️",
+            title: "Campaña de Seguro de Salud Familiar",
+            desc: "Genera confianza racional, seguridad, estabilidad institucional y tranquilidad protectora.",
+            correctPaletteId: "pal_seguros",
+            palette: {
+              id: "pal_seguros",
+              name: "Confianza Institucional",
+              colors: ["#1e3a8a", "#0284c7", "#e2e8f0", "#ffffff"],
+              tags: ["Azul Marino", "Azul Institucional", "Blanco"]
+            },
+            wrongFeedback: "El azul es el color cromático de la seguridad corporativa y la serenidad racional, ideal para servicios financieros y aseguradoras."
+          }
+        ]
+      },
+      {
+        id: "corporativa",
+        title: "Imagen Corporativa",
+        emoji: "💎",
+        desc: "Identidad visual de marcas, empresas y entidades que comunican sus valores estratégicos.",
+        items: [
+          {
+            id: "p_tech",
+            emoji: "🤖",
+            title: "Empresa de Software e Inteligencia Artificial",
+            desc: "Comunica innovación futurista, precisión matemática, rigor analítico y limpieza lógica.",
+            correctPaletteId: "pal_tech",
+            palette: {
+              id: "pal_tech",
+              name: "Tech Future Clean",
+              colors: ["#030712", "#0f172a", "#06b6d4", "#f8fafc"],
+              tags: ["Negro Código", "Azul Marino", "Cian Neón"]
+            },
+            wrongFeedback: "El sector tecnológico precisa azul marino (seguridad lógica) combinado con cian brillante (innovación de datos) sobre fondos oscuros o blancos puros."
+          },
+          {
+            id: "p_panaderia",
+            emoji: "🥖",
+            title: "Panadería y Pastelería Artesanal",
+            desc: "Evoca tradición horneada, textura de trigo, calor de hogar y autenticidad natural.",
+            correctPaletteId: "pal_panaderia",
+            palette: {
+              id: "pal_panaderia",
+              name: "Trigo Tostado & Leña",
+              colors: ["#451a03", "#9a3412", "#d97706", "#fef3c7"],
+              tags: ["Marrón Corteza", "Ocre Trigo", "Crema"]
+            },
+            wrongFeedback: "Los tonos cálidos orgánicos (marrones, ocres y crema) recuerdan directamente al grano, la harina, la madera del horno y la calidez del hogar."
+          },
+          {
+            id: "p_arquitectura",
+            emoji: "🌿",
+            title: "Estudio de Arquitectura Bioclimática",
+            desc: "Proyecta integración con la naturaleza, construcción sostenible y equilibrio ecológico.",
+            correctPaletteId: "pal_arquitectura",
+            palette: {
+              id: "pal_arquitectura",
+              name: "Hábitat Sostenible",
+              colors: ["#14532d", "#3f6212", "#78350f", "#f5f5f4"],
+              tags: ["Verde Bosque", "Verde Oliva", "Tierra"]
+            },
+            wrongFeedback: "La sostenibilidad se representa mediante la combinación analógica de verdes vegetales con marrones de la tierra y acabados neutros de piedra."
+          },
+          {
+            id: "p_joyeria",
+            emoji: "💍",
+            title: "Marca de Alta Joyería y Oro",
+            desc: "Transmite lujo sobrio, eternidad, pureza y piezas artesanas de alto valor monetario.",
+            correctPaletteId: "pal_joyeria",
+            palette: {
+              id: "pal_joyeria",
+              name: "Oro & Carbón Mate",
+              colors: ["#18181b", "#ca8a04", "#fef08a", "#ffffff"],
+              tags: ["Negro Carbón", "Oro Viejo", "Champán"]
+            },
+            wrongFeedback: "El oro destaca por contraste máximo sobre fondos negros o gris carbón mate, proyectando sobriedad y refinamiento."
+          },
+          {
+            id: "p_gimnasio",
+            emoji: "🏋️‍♂️",
+            title: "Cadena de Gimnasios de Alto Rendimiento",
+            desc: "Inspirada en el esfuerzo extremo, fuerza, superación personal y adrenalina constante.",
+            correctPaletteId: "pal_gimnasio",
+            palette: {
+              id: "pal_gimnasio",
+              name: "Fuerza & Adrenalina",
+              colors: ["#090d16", "#b91c1c", "#ea580c", "#cbd5e1"],
+              tags: ["Negro Noche", "Rojo Fuego", "Gris Acero"]
+            },
+            wrongFeedback: "El deporte de alto rendimiento necesita tonos rojos y naranjas intensos sobre negro para evocar la aceleración muscular y la fuerza bruta."
+          },
+          {
+            id: "p_banca",
+            emoji: "🏦",
+            title: "Entidad Bancaria e Inversiones",
+            desc: "Evoca solvencia económica, estabilidad institucional, serenidad y rigor profesional.",
+            correctPaletteId: "pal_banca",
+            palette: {
+              id: "pal_banca",
+              name: "Solvencia & Rigor",
+              colors: ["#0f172a", "#1e3a8a", "#475569", "#ffffff"],
+              tags: ["Azul Profundo", "Gris Plomo", "Blanco"]
+            },
+            wrongFeedback: "La banca evita colores impulsivos o inestables. Requiere azul marino profundo y grises para reflejar seriedad y protección de capital."
+          }
+        ]
+      },
+      {
+        id: "servicios",
+        title: "Diseño de Servicios",
+        emoji: "🏥",
+        desc: "Experiencias de usuario, entornos de atención médica, aplicaciones de bienestar y espacios comunitarios.",
+        items: [
+          {
+            id: "p_meditacion",
+            emoji: "🌙",
+            title: "App Móvil de Meditación y Sueño Guiado",
+            desc: "Diseñada para desacelerar la mente, combatir el insomnio y fomentar la introspección nocturna.",
+            correctPaletteId: "pal_meditacion",
+            palette: {
+              id: "pal_meditacion",
+              name: "Serenidad Nocturna Zen",
+              colors: ["#0f172a", "#38bdf8", "#818cf8", "#c084fc"],
+              tags: ["Azul Noche", "Cian Claro", "Lavanda"]
+            },
+            wrongFeedback: "Las pantallas para el sueño deben evitar la luz cálida violenta o saturada. El azul noche y el lavanda reducen la actividad cerebral e inducen al reposo."
+          },
+          {
+            id: "p_dental",
+            emoji: "🦷",
+            title: "Clínica Dental Odontopediatría Infantil",
+            desc: "Su objetivo es reducir la ansiedad de los niños, proyectar higiene clínica y simpatía.",
+            correctPaletteId: "pal_dental",
+            palette: {
+              id: "pal_dental",
+              name: "Amigable Pastel & Salud",
+              colors: ["#38bdf8", "#a7f3d0", "#fef08a", "#ffffff"],
+              tags: ["Azul Cielo", "Menta Suave", "Blanco"]
+            },
+            wrongFeedback: "Para evitar el miedo al dentista, se combinan fríos higiénicos (azul cielo y menta) desaturados con toques amables de amarillo pálido y blanco."
+          },
+          {
+            id: "p_urgencias",
+            emoji: "🚑",
+            title: "Servicio de Urgencias y Rescate Médico",
+            desc: "Identificación de máxima prioridad visual, rápida visibilidad y respuesta ante emergencias.",
+            correctPaletteId: "pal_urgencias",
+            palette: {
+              id: "pal_urgencias",
+              name: "Alerta Crítica & Cruz Médica",
+              colors: ["#dc2626", "#ffffff", "#0284c7", "#1e293b"],
+              tags: ["Rojo Cruz", "Blanco Puro", "Azul Sanitario"]
+            },
+            wrongFeedback: "Las emergencias requieren el contraste directo del rojo (prioridad/sangre/alerta) con el blanco puro de la pulcritud hospitalaria."
+          },
+          {
+            id: "p_terceraedad",
+            emoji: "🏡",
+            title: "Residencia y Centro de Día para Mayores",
+            desc: "Transmitir amparo, confort térmico, acogimiento familiar y tranquilidad serena.",
+            correctPaletteId: "pal_terceraedad",
+            palette: {
+              id: "pal_terceraedad",
+              name: "Hogar Calidez & Cuidado",
+              colors: ["#78350f", "#fed7aa", "#ccfbf1", "#ffffff"],
+              tags: ["Marrón Madera", "Melocotón", "Menta"]
+            },
+            wrongFeedback: "Los espacios gerontológicos necesitan tonos cálidos suaves (melocotón, crema) mezclados con tonos madera que evoquen confort de hogar."
+          },
+          {
+            id: "p_edu_infantil",
+            emoji: "🎨",
+            title: "Plataforma Educativa Online para Primaria",
+            desc: "Ambiente de aprendizaje alegre, interactividad estimulante pero ordenada.",
+            correctPaletteId: "pal_edu_infantil",
+            palette: {
+              id: "pal_edu_infantil",
+              name: "Optimismo & Aprendizaje",
+              colors: ["#f59e0b", "#06b6d4", "#10b981", "#ffffff"],
+              tags: ["Naranja Alegría", "Cian", "Verde Menta"]
+            },
+            wrongFeedback: "El aprendizaje infantil requiere naranja (entusiasmo y concentración) combinado con azul y verde para mantener la atención sin fatiga visual."
+          },
+          {
+            id: "p_ecohotel",
+            emoji: "🏨",
+            title: "Hotel Boutique Ecológico de Montaña",
+            desc: "Desconexión urbana, aire puro, descanso natural y experiencia orgánica cuidada.",
+            correctPaletteId: "pal_ecohotel",
+            palette: {
+              id: "pal_ecohotel",
+              name: "Bosque & Orgánico",
+              colors: ["#166534", "#854d0e", "#fef3c7", "#ffffff"],
+              tags: ["Verde Hoja", "Ocre Tierra", "Crema Lino"]
+            },
+            wrongFeedback: "La experiencia ecológica de turismo rural se transmite con verde naturaleza y ocres que simulan madera, lino y vegetación."
+          }
+        ]
+      },
+      {
+        id: "sociales",
+        title: "Campañas Sociales",
+        emoji: "🌿",
+        desc: "Concienciación ciudadana, causas ecológicas, prevención de riesgos y voluntariado.",
+        items: [
+          {
+            id: "p_incendios",
+            emoji: "🔥",
+            title: "Prevención de Incendios Forestales",
+            desc: "Alerta sobre el peligro del fuego, destrucción de masa forestal y pérdida de vidas.",
+            correctPaletteId: "pal_incendios",
+            palette: {
+              id: "pal_incendios",
+              name: "Peligro Fuego & Ceniza",
+              colors: ["#b91c1c", "#ea580c", "#1c1917", "#fef2f2"],
+              tags: ["Rojo Llama", "Naranja Incendio", "Negro Ceniza"]
+            },
+            wrongFeedback: "El peligro de incendios se comunica visualmente combinando rojo y naranja (llamas) en contraste con negro ceniza para generar impacto dramático."
+          },
+          {
+            id: "p_oceanos",
+            emoji: "🌊",
+            title: "Campaña contra los Plásticos en los Océanos",
+            desc: "Denuncia de la contaminación marina y llamada a mantener los mares limpios.",
+            correctPaletteId: "pal_oceanos",
+            palette: {
+              id: "pal_oceanos",
+              name: "Mar Limpio & Bio",
+              colors: ["#0284c7", "#0d9488", "#a7f3d0", "#ffffff"],
+              tags: ["Azul Mar", "Turquesa", "Verde Agua"]
+            },
+            wrongFeedback: "La protección de los mares combina azules marinos con verde agua y blanco para contrastar la belleza de la naturaleza limpia frente al residuo."
+          },
+          {
+            id: "p_voluntariado",
+            emoji: "🤝",
+            title: "Voluntariado e Inclusión Social Comunitario",
+            desc: "Transmite fraternidad, calidez humana, empatía, energía solidaria y optimismo.",
+            correctPaletteId: "pal_voluntariado",
+            palette: {
+              id: "pal_voluntariado",
+              name: "Calidez Solidaria",
+              colors: ["#ea580c", "#f59e0b", "#a855f7", "#ffffff"],
+              tags: ["Naranja Empatía", "Amarillo Sol", "Violeta"]
+            },
+            wrongFeedback: "La solidaridad comunitaria utiliza el naranja y amarillo cálidos por representar la calidez afectiva humana y la alegría compartida."
+          },
+          {
+            id: "p_saludmental",
+            emoji: "🧠",
+            title: "Concienciación sobre Salud Mental y Estrés",
+            desc: "Eliminar estigmas, ofrecer apoyo pacífico, serenidad interior y espacio seguro.",
+            correctPaletteId: "pal_saludmental",
+            palette: {
+              id: "pal_saludmental",
+              name: "Paz Emocional & Mente",
+              colors: ["#6366f1", "#38bdf8", "#ccfbf1", "#ffffff"],
+              tags: ["Índigo Apoyo", "Cian Serenidad", "Verde Menta"]
+            },
+            wrongFeedback: "El equilibrio psicológico se representa con violetas suaves e índigos (introspección mental) junto con azules desaturados que tranquilizan."
+          },
+          {
+            id: "p_fauna",
+            emoji: "🐼",
+            title: "Protección de Especies en Peligro de Extinción",
+            desc: "Defensa de la biodiversidad, hábitats salvajes y equilibrio ecosistémico.",
+            correctPaletteId: "pal_fauna",
+            palette: {
+              id: "pal_fauna",
+              name: "Biodiversidad Salvaje",
+              colors: ["#15803d", "#ca8a04", "#78350f", "#fef3c7"],
+              tags: ["Verde Jungla", "Ocre Bio", "Tierra"]
+            },
+            wrongFeedback: "La conservación de fauna utiliza la combinación analógica natural de verde bosque con marrones tierra y ocres vegetales."
+          },
+          {
+            id: "p_sangre",
+            emoji: "🩸",
+            title: "Campaña de Donación de Sangre",
+            desc: "Llamada urgente a salvar vidas con un tono altruista, limpio y seguro.",
+            correctPaletteId: "pal_sangre",
+            palette: {
+              id: "pal_sangre",
+              name: "Vida & Gota Vital",
+              colors: ["#dc2626", "#991b1b", "#ffffff", "#fecdd3"],
+              tags: ["Rojo Sangre", "Blanco Pulcro", "Rosa Vida"]
+            },
+            wrongFeedback: "La donación de sangre se sintetiza con el rojo vital y el blanco clínico pulcro que genera confianza en el procedimiento médico."
+          }
+        ]
+      },
+      {
+        id: "productos",
+        title: "Identidad de Productos",
+        emoji: "🍽️",
+        desc: "Packaging y etiquetas de productos de consumo donde el color anticipa el sabor o la calidad.",
+        items: [
+          {
+            id: "p_cafe",
+            emoji: "☕",
+            title: "Café de Tueste Natural Artesano",
+            desc: "Anticipa el aroma intenso, grano tostado, calidez del tueste y tradición cafetera.",
+            correctPaletteId: "pal_cafe",
+            palette: {
+              id: "pal_cafe",
+              name: "Cacao & Tueste Intenso",
+              colors: ["#271c19", "#78350f", "#d97706", "#fef3c7"],
+              tags: ["Marrón Café", "Tostado", "Crema Espuma"]
+            },
+            wrongFeedback: "El packaging de café requiere marrones oscuros de grano tostado y ocres que evocan el aroma y la espuma de la bebida caliente."
+          },
+          {
+            id: "p_snack_bio",
+            emoji: "🥗",
+            title: "Snack Saludable Ecológico 100% Bio",
+            desc: "Informa sobre ausencia de conservantes, vegetal fresco, salud y ligereza.",
+            correctPaletteId: "pal_snack_bio",
+            palette: {
+              id: "pal_snack_bio",
+              name: "Huerta Fresca & Vital",
+              colors: ["#15803d", "#84cc16", "#fef08a", "#ffffff"],
+              tags: ["Verde Hoja", "Verde Lima", "Amarillo Sol"]
+            },
+            wrongFeedback: "Los productos ecológicos utilizan verdes brillantes (hoja y lima) con amarillo para indicar frescura vegetal recién cosechada."
+          },
+          {
+            id: "p_energy_drink",
+            emoji: "⚡",
+            title: "Bebida Energética Juvenil Neón",
+            desc: "Dirigida a público joven, gaming y deportes extremos; transmite chispa y ritmo.",
+            correctPaletteId: "pal_energy_drink",
+            palette: {
+              id: "pal_energy_drink",
+              name: "Chispa Neón Eléctrica",
+              colors: ["#090d16", "#facc15", "#06b6d4", "#ec4899"],
+              tags: ["Negro", "Amarillo Neón", "Cian"]
+            },
+            wrongFeedback: "Las bebidas de alta estimulación usan amarillo neón y cian sobre lata negra para sugerir potencia sintética y sabor electrizante."
+          },
+          {
+            id: "p_cosmetica_bio",
+            emoji: "🧴",
+            title: "Cosmética Natural e Higiene Orgánica",
+            desc: "Sensación de delicadeza en la piel, botánica pura, sin sulfatos y aroma suave.",
+            correctPaletteId: "pal_cosmetica_bio",
+            palette: {
+              id: "pal_cosmetica_bio",
+              name: "Botanical Pureness",
+              colors: ["#ccfbf1", "#fbcfe8", "#ffffff", "#94a3b8"],
+              tags: ["Menta Suave", "Rosa Pétalo", "Blanco"]
+            },
+            wrongFeedback: "La cosmética bio busca tonos pastel extremadamente suaves (menta, rosa pétalo y blanco) para comunicar delicadeza dérmica."
+          },
+          {
+            id: "p_chocolate",
+            emoji: "🍫",
+            title: "Chocolate Negro 85% Cacao Gourmet",
+            desc: "Proyecta amargor noble, sofisticación para el paladar y calidad prémium.",
+            correctPaletteId: "pal_chocolate",
+            palette: {
+              id: "pal_chocolate",
+              name: "Cacao Puro & Oro",
+              colors: ["#180e0a", "#451a03", "#ca8a04", "#ffffff"],
+              tags: ["Negro Cacao", "Marrón Oscuro", "Oro"]
+            },
+            wrongFeedback: "El chocolate prémium requiere el marrón oscuro casi negro del cacao puro acompañado de detalles dorados que denotan alta repostería."
+          },
+          {
+            id: "p_helado",
+            emoji: "🍧",
+            title: "Helado Artesanal de Frutas Tropicales",
+            desc: "Evoca el dulzor de la fruta madura, frescor estival y vitalidad sabrosa.",
+            correctPaletteId: "pal_helado",
+            palette: {
+              id: "pal_helado",
+              name: "Fruta Tropical Dulce",
+              colors: ["#f43f5e", "#fb923c", "#facc15", "#ffffff"],
+              tags: ["Rosa Fresa", "Naranja Mango", "Amarillo Sol"]
+            },
+            wrongFeedback: "Los alimentos estivales dulces utilizan tonos fruta de alta saturación (fresa, mango, plátano) para provocar la apetencia del consumidor."
+          }
+        ]
+      }
+    ];
+
+    /* INFOGRAPHIC DATA: THE 8 CORE COLORS IN COLOR PSYCHOLOGY */
+    const CORE_COLORS_INFOGRAPHIC = [
+      {
+        name: "Rojo",
+        hex: "#ef4444",
+        bg: "rgba(239, 68, 68, 0.15)",
+        border: "rgba(239, 68, 68, 0.4)",
+        textColor: "#fca5a5",
+        concepts: "Pasión, peligro, urgencia, estimulación del apetito, energía muscular y aceleración del pulso."
+      },
+      {
+        name: "Azul",
+        hex: "#3b82f6",
+        bg: "rgba(59, 130, 246, 0.15)",
+        border: "rgba(59, 130, 246, 0.4)",
+        textColor: "#93c5fd",
+        concepts: "Confianza, serenidad, tecnología, higiene, estabilidad corporativa y supresión del estrés."
+      },
+      {
+        name: "Amarillo",
+        hex: "#eab308",
+        bg: "rgba(234, 179, 8, 0.15)",
+        border: "rgba(234, 179, 8, 0.4)",
+        textColor: "#fde047",
+        concepts: "Optimismo, alegría, visibilidad óptica, luz, rapidez comercial y precaución de alerta."
+      },
+      {
+        name: "Verde",
+        hex: "#22c55e",
+        bg: "rgba(34, 197, 94, 0.15)",
+        border: "rgba(34, 197, 94, 0.4)",
+        textColor: "#86efac",
+        concepts: "Naturaleza, sostenibilidad, salud, renovación, equilibrio orgánico y calma biológica."
+      },
+      {
+        name: "Naranja",
+        hex: "#f97316",
+        bg: "rgba(249, 115, 22, 0.15)",
+        border: "rgba(249, 115, 22, 0.4)",
+        textColor: "#fdba74",
+        concepts: "Entusiasmo, creatividad, juventud, dinamismo deportivo, cercanía y calidez festiva."
+      },
+      {
+        name: "Violeta",
+        hex: "#a855f7",
+        bg: "rgba(168, 85, 247, 0.15)",
+        border: "rgba(168, 85, 247, 0.4)",
+        textColor: "#d8b4fe",
+        concepts: "Lujo, misterio, espiritualidad, imaginación, nobleza y sofisticación exclusiva."
+      },
+      {
+        name: "Negro",
+        hex: "#090d16",
+        bg: "rgba(15, 23, 42, 0.8)",
+        border: "rgba(255, 255, 255, 0.2)",
+        textColor: "#f1f5f9",
+        concepts: "Elegancia, poder, formalidad, sobriedad, oscuridad, contraste de alto valor y prestigio."
+      },
+      {
+        name: "Blanco",
+        hex: "#ffffff",
+        bg: "rgba(255, 255, 255, 0.1)",
+        border: "rgba(255, 255, 255, 0.3)",
+        textColor: "#ffffff",
+        concepts: "Pureza, simplicidad, paz, pulcritud clínica, minimalismo e inocencia."
+      }
+    ];
+
+    /* ==========================================================================
+       APPLICATION ENGINE STATE & INTERACTIONS
+       ========================================================================== */
+    let currentRealm = null;
+    let currentProjects = [];
+    let currentPalettes = [];
+    let matchesState = {}; // Key: projectId, Value: paletteId
+    let selectedPaletteForTap = null;
+
+    // INITIALIZATION ON DOM LOAD
+    window.addEventListener("DOMContentLoaded", () => {
+      renderRealmsSelection();
+      renderInfographicSummary();
+    });
+
+    // RENDER REALM SELECTION CARDS
+    function renderRealmsSelection() {
+      const container = document.getElementById("realms-container");
+      container.innerHTML = "";
+
+      REALMS_DATA.forEach(realm => {
+        const card = document.createElement("div");
+        card.className = "realm-card";
+        card.onclick = () => selectRealm(realm.id);
+
+        card.innerHTML = `
+          <div class="realm-emoji">${realm.emoji}</div>
+          <div class="realm-title">${realm.title}</div>
+          <div class="realm-desc">${realm.desc}</div>
+          <div style="margin-top: auto; padding-top: 0.5rem; font-size: 0.8rem; font-weight: 700; color: var(--accent-cyan);">
+            Comenzar encargo (${realm.items.length} proyectos) →
+          </div>
+        `;
+        container.appendChild(card);
+      });
+    }
+
+    // SELECT A REALM AND SETUP GAME STAGE
+    function selectRealm(realmId) {
+      currentRealm = REALMS_DATA.find(r => r.id === realmId);
+      if (!currentRealm) return;
+
+      // Deep copy projects and extract palettes
+      currentProjects = JSON.parse(JSON.stringify(currentRealm.items));
+      currentPalettes = currentProjects.map(p => p.palette);
+
+      // Shuffle arrays for dynamic learning challenge
+      shuffleArray(currentPalettes);
+
+      // Reset state
+      matchesState = {};
+      selectedPaletteForTap = null;
+
+      // Update Header & Banner UI
+      document.getElementById("active-realm-emoji").textContent = currentRealm.emoji;
+      document.getElementById("active-realm-title").textContent = currentRealm.title;
+      document.getElementById("active-realm-desc").textContent = currentRealm.desc;
+      updateScoreCounter();
+
+      // Render activity items
+      renderPalettesStack();
+      renderProjectsStack();
+
+      // View transition
+      switchView("view-realms", "view-activity");
+    }
+
+    // RENDER PALETTES STACK (LEFT COLUMN)
+    function renderPalettesStack() {
+      const stack = document.getElementById("palettes-stack");
+      stack.innerHTML = "";
+
+      currentPalettes.forEach(pal => {
+        const isAssigned = Object.values(matchesState).includes(pal.id);
+        const isSelectedTap = selectedPaletteForTap === pal.id;
+
+        const card = document.createElement("div");
+        card.className = `palette-card ${isAssigned ? 'matched-assigned' : ''} ${isSelectedTap ? 'selected-for-tap' : ''}`;
+        card.id = `palette-${pal.id}`;
+        card.draggable = !isAssigned;
+
+        // Drag events
+        card.ondragstart = (e) => onDragStart(e, pal.id);
+        card.ondragend = (e) => onDragEnd(e);
+
+        // Click / Tap selection event
+        card.onclick = () => onPaletteClick(pal.id, isAssigned);
+
+        // Render Swatches
+        let swatchesHtml = `<div class="swatches-container">`;
+        pal.colors.forEach(c => {
+          swatchesHtml += `<div class="swatch-circle" style="background-color: ${c};"></div>`;
+        });
+        swatchesHtml += `</div>`;
+
+        // Render Tags
+        let tagsHtml = `<div class="palette-tags">`;
+        pal.tags.forEach(t => {
+          tagsHtml += `<span class="palette-tag">${t}</span>`;
+        });
+        tagsHtml += `</div>`;
+
+        card.innerHTML = `
+          ${swatchesHtml}
+          <div class="palette-name">${pal.name}</div>
+          ${tagsHtml}
+        `;
+
+        stack.appendChild(card);
+      });
+    }
+
+    // RENDER PROJECTS STACK (RIGHT COLUMN)
+    function renderProjectsStack() {
+      const stack = document.getElementById("projects-stack");
+      stack.innerHTML = "";
+
+      currentProjects.forEach(proj => {
+        const assignedPaletteId = matchesState[proj.id];
+        const assignedPalette = assignedPaletteId ? currentPalettes.find(p => p.id === assignedPaletteId) : null;
+
+        const card = document.createElement("div");
+        card.className = "project-card";
+        card.id = `project-${proj.id}`;
+
+        // Drop zone drag events
+        card.ondragover = (e) => onDragOver(e, card);
+        card.ondragleave = (e) => onDragLeave(e, card);
+        card.ondrop = (e) => onDrop(e, proj.id, card);
+
+        // Tap assignment fallback
+        card.onclick = (e) => onProjectClick(proj.id);
+
+        let slotHtml = "";
+        if (assignedPalette) {
+          let swatchesMini = `<div class="dropped-swatches">`;
+          assignedPalette.colors.forEach(c => {
+            swatchesMini += `<div class="dropped-swatch" style="background-color: ${c};"></div>`;
+          });
+          swatchesMini += `</div>`;
+
+          slotHtml = `
+            <div class="drop-slot">
+              <div class="dropped-palette-content">
+                <div style="display: flex; align-items: center; gap: 0.6rem;">
+                  ${swatchesMini}
+                  <span style="font-weight: 700; font-size: 0.85rem; color: white;">${assignedPalette.name}</span>
+                </div>
+                <button class="remove-match-btn" title="Deshacer selección" onclick="removeMatch('${proj.id}', event)">✕</button>
+              </div>
+            </div>
+          `;
+        } else {
+          slotHtml = `
+            <div class="drop-slot">
+              <span class="drop-slot-placeholder">
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+                Arrastra una paleta o tócala para asignar
+              </span>
+            </div>
+          `;
+        }
+
+        card.innerHTML = `
+          <div class="project-header">
+            <div class="project-title-box">
+              <div class="project-emoji">${proj.emoji}</div>
+              <div>
+                <div class="project-title">${proj.title}</div>
+                <div class="project-desc">${proj.desc}</div>
+              </div>
+            </div>
+            <div id="status-${proj.id}"></div>
+          </div>
+          ${slotHtml}
+          <div id="feedback-${proj.id}"></div>
+        `;
+
+        stack.appendChild(card);
+      });
+    }
+
+    /* DRAG & DROP HANDLERS */
+    function onDragStart(e, paletteId) {
+      e.dataTransfer.setData("text/plain", paletteId);
+      const el = document.getElementById(`palette-${paletteId}`);
+      if (el) el.classList.add("dragging");
+    }
+
+    function onDragEnd(e) {
+      document.querySelectorAll(".palette-card").forEach(el => el.classList.remove("dragging"));
+      document.querySelectorAll(".project-card").forEach(el => el.classList.remove("drag-over"));
+    }
+
+    function onDragOver(e, cardEl) {
+      e.preventDefault();
+      cardEl.classList.add("drag-over");
+    }
+
+    function onDragLeave(e, cardEl) {
+      cardEl.classList.remove("drag-over");
+    }
+
+    function onDrop(e, projectId, cardEl) {
+      e.preventDefault();
+      cardEl.classList.remove("drag-over");
+      const paletteId = e.dataTransfer.getData("text/plain");
+
+      if (paletteId) {
+        assignPaletteToProject(paletteId, projectId);
+      }
+    }
+
+    /* CLICK / TAP MATCHING HANDLERS FOR MOBILE ACCESSIBILITY */
+    function onPaletteClick(paletteId, isAssigned) {
+      if (isAssigned) return;
+
+      if (selectedPaletteForTap === paletteId) {
+        selectedPaletteForTap = null; // Deselect if tapped again
+      } else {
+        selectedPaletteForTap = paletteId;
+      }
+      renderPalettesStack();
+    }
+
+    function onProjectClick(projectId) {
+      if (!selectedPaletteForTap) return;
+      assignPaletteToProject(selectedPaletteForTap, projectId);
+      selectedPaletteForTap = null;
+    }
+
+    // CORE ASSIGNMENT MECHANIC
+    function assignPaletteToProject(paletteId, projectId) {
+      // Clear palette if assigned elsewhere
+      for (let pId in matchesState) {
+        if (matchesState[pId] === paletteId) {
+          delete matchesState[pId];
+        }
+      }
+
+      // Assign palette to new target project
+      matchesState[projectId] = paletteId;
+
+      // Refresh UI
+      renderPalettesStack();
+      renderProjectsStack();
+      updateScoreCounter();
+    }
+
+    function removeMatch(projectId, event) {
+      if (event) event.stopPropagation();
+      delete matchesState[projectId];
+      renderPalettesStack();
+      renderProjectsStack();
+      updateScoreCounter();
+    }
+
+    function resetCurrentMatches() {
+      matchesState = {};
+      selectedPaletteForTap = null;
+      renderPalettesStack();
+      renderProjectsStack();
+      updateScoreCounter();
+    }
+
+    function updateScoreCounter() {
+      const assignedCount = Object.keys(matchesState).length;
+      const total = currentProjects.length;
+      document.getElementById("score-counter").textContent = `${assignedCount} / ${total} asignados`;
+    }
+
+    // CHECK ANSWERS & FORMATIVE FEEDBACK
+    function checkAnswers() {
+      const assignedCount = Object.keys(matchesState).length;
+      const total = currentProjects.length;
+
+      if (assignedCount < total) {
+        alert("Por favor, asigna una paleta de colores a cada uno de los proyectos antes de comprobar.");
+        return;
+      }
+
+      let correctCount = 0;
+
+      currentProjects.forEach(proj => {
+        const assignedPaletteId = matchesState[proj.id];
+        const projCard = document.getElementById(`project-${proj.id}`);
+        const statusContainer = document.getElementById(`status-${proj.id}`);
+        const feedbackContainer = document.getElementById(`feedback-${proj.id}`);
+
+        const isCorrect = assignedPaletteId === proj.correctPaletteId;
+
+        if (isCorrect) {
+          correctCount++;
+          projCard.className = "project-card is-correct";
+          statusContainer.innerHTML = `<span class="status-badge" style="color: var(--accent-green);">✅ Correcto</span>`;
+          feedbackContainer.innerHTML = "";
+        } else {
+          projCard.className = "project-card is-incorrect";
+          statusContainer.innerHTML = `<span class="status-badge" style="color: var(--accent-red);">❌ Incorrecto</span>`;
+          
+          feedbackContainer.innerHTML = `
+            <div class="feedback-box">
+              <strong>💡 Retroalimentación formativa:</strong><br>
+              ${proj.wrongFeedback}
+            </div>
+          `;
+        }
+      });
+
+      // All 100% correct -> Celebration & Infographic Summary
+      if (correctCount === total) {
+        triggerConfetti();
+        setTimeout(() => {
+          switchView("view-activity", "view-summary");
+        }, 1200);
+      }
+    }
+
+    // RENDER INFOGRAPHIC SUMMARY OF THE 8 CORE COLORS
+    function renderInfographicSummary() {
+      const container = document.getElementById("infographic-container");
+      container.innerHTML = "";
+
+      CORE_COLORS_INFOGRAPHIC.forEach(colorItem => {
+        const card = document.createElement("div");
+        card.className = "color-info-card";
+        card.style.backgroundColor = colorItem.bg;
+        card.style.borderColor = colorItem.border;
+
+        card.innerHTML = `
+          <div class="color-info-header">
+            <div class="color-dot-large" style="background-color: ${colorItem.hex};"></div>
+            <span style="color: ${colorItem.textColor};">${colorItem.name}</span>
+          </div>
+          <div class="color-concepts">${colorItem.concepts}</div>
+        `;
+
+        container.appendChild(card);
+      });
+    }
+
+    /* NAVIGATION ENGINE */
+    function switchView(fromId, toId) {
+      document.getElementById(fromId).classList.add("hidden-view");
+      const toEl = document.getElementById(toId);
+      toEl.classList.remove("hidden-view");
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function returnToRealms() {
+      switchView("view-activity", "view-realms");
+    }
+
+    function restartEntireActivity() {
+      switchView("view-summary", "view-realms");
+    }
+
+    /* UTILITY SHUFFLE ARRAY */
+    function shuffleArray(array) {
+      for (let i = array.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [array[i], array[j]] = [array[j], array[i]];
+      }
+    }
+
+    /* STANDALONE CONFETTI EXPLOSION */
+    function triggerConfetti() {
+      const canvas = document.getElementById("confetti-canvas");
+      const ctx = canvas.getContext("2d");
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+
+      const particles = [];
+      const colors = ["#06b6d4", "#3b82f6", "#a855f7", "#ec4899", "#f59e0b", "#22c55e"];
+
+      for (let i = 0; i < 90; i++) {
+        particles.push({
+          x: canvas.width / 2,
+          y: canvas.height / 3,
+          vx: (Math.random() - 0.5) * 14,
+          vy: (Math.random() - 0.7) * 14,
+          size: Math.random() * 8 + 4,
+          color: colors[Math.floor(Math.random() * colors.length)],
+          alpha: 1,
+          decay: Math.random() * 0.015 + 0.01
+        });
+      }
+
+      function animate() {
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        let active = false;
+
+        particles.forEach(p => {
+          if (p.alpha > 0) {
+            active = true;
+            p.x += p.vx;
+            p.y += p.vy;
+            p.vy += 0.25; // gravity
+            p.alpha -= p.decay;
+
+            ctx.save();
+            ctx.globalAlpha = Math.max(0, p.alpha);
+            ctx.fillStyle = p.color;
+            ctx.fillRect(p.x, p.y, p.size, p.size);
+            ctx.restore();
+          }
+        });
+
+        if (active) {
+          requestAnimationFrame(animate);
+        } else {
+          ctx.clearRect(0, 0, canvas.width, canvas.height);
+        }
+      }
+
+      animate();
+    }
+  </script>
+</body>
+</html>
